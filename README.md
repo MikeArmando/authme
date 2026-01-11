@@ -1,7 +1,6 @@
 # Authentication form
 
-A full-stack user management system built to learn Vanilla JavaScript, Node.js, and
-relational databases.
+A full-stack user management system built to learn Vanilla JavaScript, Node.js with express, and relational databases.
 
 - **Live demo:** (Check out the project here)
 
