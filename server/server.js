@@ -17,6 +17,7 @@ const pool = new Pool({
   port: process.env.DB_PORT,
 });
 
+// -------------------------- Sign Up --------------------------
 app.post("/api/signup", async (request, response) => {
   const userData = request.body;
 
@@ -53,6 +54,38 @@ app.post("/api/signup", async (request, response) => {
   }
 });
 
+// -------------------------- Log In --------------------------
+app.post("/api/login", async (request, response) => {
+  const { email, password } = request.body;
+
+  try {
+    const queryText = "SELECT * FROM users WHERE email = $1;";
+    const result = await pool.query(queryText, [email]);
+
+    if (result.rows.length === 0) {
+      return response
+        .status(401)
+        .json({ message: "Invalid email or password" });
+    }
+
+    const user = result.rows[0];
+
+    if (user.password === password) {
+      response.status(200).json({
+        message: "Login successful!",
+        user: { id: user.id, firstName: user.first_name },
+      });
+    } else {
+      response.status(401).json({ message: "Invalid email or password" });
+    }
+  } catch (error) {
+    console.error("Database Error:", error);
+
+    response.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+// -----------------------------------------------------------
 app.listen(PORT, () =>
   console.log(`Server listening at: http://localhost:${PORT}`)
 );

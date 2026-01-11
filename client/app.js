@@ -8,7 +8,7 @@ const linkToSignup = document.getElementById("link-to-signup");
 const signupForm = document.getElementById("signup-form");
 const loginForm = document.getElementById("login-form");
 
-// ------------------------- Event Listeners -------------------------
+// -------------------------- Event Listeners --------------------------
 linkToLogin.addEventListener("click", (event) => {
   event.preventDefault();
 
@@ -31,7 +31,7 @@ if (loginForm) {
   loginForm.addEventListener("submit", handleLogin);
 }
 
-// ------------------------- Logic for Sign Up -------------------------
+// -------------------------- Sign Up --------------------------
 async function handleSignup(event) {
   event.preventDefault();
 
@@ -63,7 +63,7 @@ async function handleSignup(event) {
     if (response.ok) {
       console.log("Result:", result);
       alert("User created! Check the server console.");
-      
+
       form.reset();
     } else {
       console.error("Server Error:", result);
@@ -75,8 +75,8 @@ async function handleSignup(event) {
   }
 }
 
-// ------------------------- Logic for Log In -------------------------
-function handleLogin(event) {
+// -------------------------- Log In --------------------------
+async function handleLogin(event) {
   event.preventDefault();
 
   const form = event.target;
@@ -87,9 +87,29 @@ function handleLogin(event) {
 
   const formData = new FormData(form);
   const userData = Object.fromEntries(formData);
+
+  try {
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      alert(result.message);
+      return;
+    }
+
+    alert(result.message);
+  } catch (error) {
+    console.error("Network Error:", error);
+    alert("Something went wrong. Please try again later.");
+  }
 }
 
-// ------------------------- Show Errors -------------------------
+// -------------------------- Show Errors --------------------------
 function showErrors(form) {
   Array.from(form.elements).forEach((input) => {
     if (!input.checkValidity()) {
