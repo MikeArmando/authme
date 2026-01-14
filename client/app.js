@@ -67,7 +67,7 @@ async function handleSignup(event) {
   }
 
   try {
-    const response = await fetch("/api/signup", {
+    const response = await fetch("/user/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -78,16 +78,12 @@ async function handleSignup(event) {
     const result = await response.json();
 
     if (!response.ok) {
-      console.error("Server Error:", result);
       showErrors(formType, result);
       return;
     }
 
-    console.log("Result:", result);
     localStorage.setItem("user", JSON.stringify(result));
-
     showWelcomePage(result.firstName);
-
     form.reset();
   } catch (error) {
     console.error("Network Error:", error);
@@ -105,7 +101,7 @@ async function handleLogin(event) {
   const formType = "login";
 
   try {
-    const response = await fetch("/api/login", {
+    const response = await fetch("/user/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
