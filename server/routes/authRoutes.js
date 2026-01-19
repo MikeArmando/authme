@@ -5,8 +5,6 @@ import { validateSignup, validateLogin } from "../middleware/validators.js";
 
 const router = express.Router();
 
-const SALT_ROUNDS = 10;
-
 // ------------------------------ Sign Up Logic ------------------------------
 router.post("/signup", validateSignup, async (request, response) => {
   try {
@@ -17,7 +15,7 @@ router.post("/signup", validateSignup, async (request, response) => {
       password,
     } = request.body;
 
-    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+    const hashedPassword = await bcrypt.hash(password, process.env.SALT_ROUNDS);
 
     const queryText = `
       INSERT INTO users (first_name, last_name, email, password)
