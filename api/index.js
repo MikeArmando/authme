@@ -10,6 +10,6 @@ app.use(cors());
 app.use(express.static("client"));
 app.use(express.json());
 
-app.use("/user", authRoutes);
+app.use("/api/user", authRoutes);
 
 export default app;

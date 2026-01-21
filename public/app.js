@@ -67,7 +67,7 @@ async function handleSignup(event) {
   }
 
   try {
-    const response = await fetch("/user/signup", {
+    const response = await fetch("/api/user/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -101,7 +101,7 @@ async function handleLogin(event) {
   const formType = "login";
 
   try {
-    const response = await fetch("/user/login", {
+    const response = await fetch("/api/user/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
@@ -134,7 +134,7 @@ function showWelcomePage(userName) {
 // -------------------------- Show Errors --------------------------
 function showErrors(formType, result) {
   const errorSpan = document.getElementById(
-    `${formType}-${result.field}-error`
+    `${formType}-${result.field}-error`,
   );
   errorSpan.classList.add("active");
   errorSpan.textContent = result.message;
