@@ -3,13 +3,13 @@
 A secure, full-stack authentication system built with Node.js, Express, and PostgreSQL.
 This project features a complete user registration and login flow. It ensures data integrity through multi-layer validation and prioritizes security by utilizing industry-standard password hashing and environment variable management. Once authenticated, users gain access to a personalized welcome interface.
 
-- **Live demo:** (Check out the project here)
+- **Live:** [AuthMe](https://authme-red.vercel.app)
 
 ## Preview
 
-![Signup Page](client/assets/signup-image.png)
-![Login Page](client/assets/login-image.png)
-![Welcome Page](client/assets/welcome-image.png)
+![Signup Page](/public/assets/signup-image.png)
+![Login Page](/public/assets/login-image.png)
+![Welcome Page](/public/assets/welcome-image.png)
 
 ## Key Features
 
