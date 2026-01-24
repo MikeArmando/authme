@@ -8,6 +8,13 @@ const linkToSignup = document.getElementById("link-to-signup");
 const signupForm = document.getElementById("signup-form");
 const loginForm = document.getElementById("login-form");
 
+const confirmPasswordInput = document.getElementById("signup-confirm-password");
+const PasswordInput = document.getElementById("signup-password");
+
+const passwordErrorDisplay = document.getElementById(
+  "signup-confirm-password-error",
+);
+
 // -------------------------- Event Listeners --------------------------
 window.addEventListener("DOMContentLoaded", () => {
   const savedUser = localStorage.getItem("user");
@@ -139,3 +146,12 @@ function showErrors(formType, result) {
   errorSpan.classList.add("active");
   errorSpan.textContent = result.message;
 }
+
+// -------------------------- Clear Error Messages --------------------------
+PasswordInput.addEventListener("input", () => {
+  passwordErrorDisplay.textContent = "";
+});
+
+confirmPasswordInput.addEventListener("input", () => {
+  passwordErrorDisplay.textContent = "";
+});
