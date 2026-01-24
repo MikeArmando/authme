@@ -9,14 +9,14 @@ const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS) || 10;
 
 // ------------------------------ Sign Up Logic ------------------------------
 router.post("/signup", validateSignup, async (request, response) => {
-  try {
-    const {
-      "first-name": firstName,
-      "last-name": lastName,
-      email,
-      password,
-    } = request.body;
+  const {
+    "first-name": firstName,
+    "last-name": lastName,
+    email,
+    password,
+  } = request.body;
 
+  try {
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
     const queryText = `
@@ -31,7 +31,6 @@ router.post("/signup", validateSignup, async (request, response) => {
     response.status(201).json({
       message: "User created successfully!",
       firstName: result.rows[0].firstName,
-      lastName: result.rows[0].lastName,
       email: result.rows[0].email,
     });
   } catch (error) {
@@ -78,7 +77,7 @@ router.post("/login", validateLogin, async (request, response) => {
 
     response.status(200).json({
       message: "Login successful!",
-      user: { email: user.email, firstName: user.first_name },
+      user: { firstName: user.first_name, email: user.email },
     });
   } catch (error) {
     console.error("Database Error:", error);

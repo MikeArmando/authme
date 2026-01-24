@@ -18,32 +18,40 @@ const passwordErrorDisplay = document.getElementById(
 // -------------------------- Event Listeners --------------------------
 window.addEventListener("DOMContentLoaded", () => {
   const savedUser = localStorage.getItem("user");
-
   if (savedUser) {
     const user = JSON.parse(savedUser);
-    showWelcomePage(user.firstName);
+    showWelcomePage(user.firstName, user.email);
+    return;
   }
-});
-
-linkToLogin.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  signupSection.classList.add("hidden");
-  loginSection.classList.remove("hidden");
+  
+  history.pushState({ view: "signup" }, "", "/signup");
 });
 
 linkToSignup.addEventListener("click", (event) => {
   event.preventDefault();
 
+  history.pushState({ view: "signup" }, "", "/signup");
+
   loginSection.classList.add("hidden");
   signupSection.classList.remove("hidden");
+});
+
+linkToLogin.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  history.pushState({ view: "login" }, "", "/login");
+
+  signupSection.classList.add("hidden");
+  loginSection.classList.remove("hidden");
 });
 
 logoutBtn.addEventListener("click", () => {
   localStorage.removeItem("user");
 
-  document.getElementById("welcome-section").classList.add("hidden");
+  document.getElementById("dashboard-section").classList.add("hidden");
   loginSection.classList.remove("hidden");
+
+  history.pushState({ view: "login" }, "", "/login");
 });
 
 if (signupForm) {
@@ -90,8 +98,9 @@ async function handleSignup(event) {
     }
 
     localStorage.setItem("user", JSON.stringify(result));
-    showWelcomePage(result.firstName);
     form.reset();
+
+    showWelcomePage(result.firstName, result.email);
   } catch (error) {
     console.error("Network Error:", error);
     alert("Something went wrong. Please try again later.");
@@ -123,7 +132,7 @@ async function handleLogin(event) {
 
     localStorage.setItem("user", JSON.stringify(result.user));
 
-    showWelcomePage(result.user.firstName);
+    showWelcomePage(result.user.firstName, result.user.email);
   } catch (error) {
     console.error("Network Error:", error);
     alert("Something went wrong. Please try again later.");
@@ -131,11 +140,15 @@ async function handleLogin(event) {
 }
 
 // -------------------------- Show Welcome Page --------------------------
-function showWelcomePage(userName) {
+function showWelcomePage(userName, userEmail) {
+  history.pushState({ view: "dashboard" }, "", "/dashboard");
+
   loginSection.classList.add("hidden");
   signupSection.classList.add("hidden");
-  document.getElementById("welcome-section").classList.remove("hidden");
-  document.getElementById("Welcome-message").textContent = ` ${userName}!`;
+  document.getElementById("dashboard-section").classList.remove("hidden");
+  document.getElementById("dashboard-welcome-message").textContent =
+    ` ${userName}!`;
+  document.getElementById("dashboard-email-message").textContent = userEmail;
 }
 
 // -------------------------- Show Errors --------------------------
@@ -143,8 +156,14 @@ function showErrors(formType, result) {
   const errorSpan = document.getElementById(
     `${formType}-${result.field}-error`,
   );
-  errorSpan.classList.add("active");
-  errorSpan.textContent = result.message;
+
+  if (errorSpan) {
+    errorSpan.classList.add("active");
+    errorSpan.textContent = result.message;
+  } else {
+    console.error("Unknown error field:", result.field);
+    alert(result.message);
+  }
 }
 
 // -------------------------- Clear Error Messages --------------------------

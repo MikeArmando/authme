@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="style.css" />
     <script src="app.js" defer></script>
-    <title>Authentication form</title>
+    <title>AuthMe</title>
   </head>
   <body>
     <div class="main-container">
@@ -106,9 +106,10 @@
         </form>
       </section>
 
-      <section id="welcome-section" class="welcome-section hidden">
+      <section id="dashboard-section" class="dashboard-section hidden">
         <div>
-          <h1>Welcome<span id="Welcome-message"></span></h1>
+          <h1>Welcome<span id="dashboard-welcome-message"></span></h1>
+          <span id="dashboard-email-message"></span>
           <button id="logout-btn">LOG OUT</button>
         </div>
         <img src="assets/cat1.png" alt="" class="cat1" />
