@@ -19,21 +19,6 @@ body {
   height: 100vh;
 }
 
-.main-container .auth-section {
-  width: 28rem;
-  max-width: 90%;
-}
-
-.main-container form {
-  display: flex;
-  flex-direction: column;
-}
-
-.main-container form h2 {
-  font-size: 2.2rem;
-  margin: 0.5rem 0;
-}
-
 .main-container a {
   font-size: 0.9rem;
   color: rgb(30, 30, 30);
@@ -47,12 +32,21 @@ body {
   text-decoration-color: currentColor;
 }
 
-.hidden {
-  display: none;
+/** ------------ Auth Pages ------------ **/
+.auth-section {
+  width: 28rem;
+  max-width: 90%;
+  animation: fadeIn 0.4s ease-in-out;
 }
 
-.auth-section {
-  animation: fadeIn 0.4s ease-in-out;
+.auth-section form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-section form h2 {
+  font-size: 2.2rem;
+  margin: 0.5rem 0;
 }
 
 /** ------------ Dashboard ------------ **/
@@ -83,6 +77,10 @@ body {
 }
 
 /** ------------ Constant Elements ------------ **/
+.hidden {
+  display: none;
+}
+
 .invalid-input {
   display: none;
   color: #dc3545;
