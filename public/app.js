@@ -11,21 +11,14 @@ const loginForm = document.getElementById("login-form");
 const confirmPasswordInput = document.getElementById("signup-confirm-password");
 const PasswordInput = document.getElementById("signup-password");
 
+const loadingIndicator = document.getElementById("app-loading-section");
+
 const passwordErrorDisplay = document.getElementById(
   "signup-confirm-password-error",
 );
 
 // -------------------------- Event Listeners --------------------------
-window.addEventListener("DOMContentLoaded", () => {
-  const savedUser = localStorage.getItem("user");
-  if (savedUser) {
-    const user = JSON.parse(savedUser);
-    showWelcomePage(user.firstName, user.email);
-    return;
-  }
-  
-  history.pushState({ view: "signup" }, "", "/signup");
-});
+window.addEventListener("DOMContentLoaded", checkLoginStatus);
 
 linkToSignup.addEventListener("click", (event) => {
   event.preventDefault();
@@ -45,13 +38,23 @@ linkToLogin.addEventListener("click", (event) => {
   loginSection.classList.remove("hidden");
 });
 
-logoutBtn.addEventListener("click", () => {
-  localStorage.removeItem("user");
+logoutBtn.addEventListener("click", async () => {
+  try {
+    const response = await fetch("/api/user/logout", {
+      method: "POST",
+    });
 
-  document.getElementById("dashboard-section").classList.add("hidden");
-  loginSection.classList.remove("hidden");
+    const data = await response.json();
 
-  history.pushState({ view: "login" }, "", "/login");
+    if (data.success) {
+      document.getElementById("dashboard-section").classList.add("hidden");
+      loginSection.classList.remove("hidden");
+
+      history.pushState({ view: "login" }, "", "/login");
+    }
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
 });
 
 if (signupForm) {
@@ -60,6 +63,40 @@ if (signupForm) {
 
 if (loginForm) {
   loginForm.addEventListener("submit", handleLogin);
+}
+
+// -------------------------- Inicial Validation Check --------------------------
+async function checkLoginStatus() {
+  const path = window.location.pathname;
+
+  try {
+    const response = await fetch("/api/user/dashboard");
+    const data = await response.json();
+
+    if (loadingIndicator) {
+      loadingIndicator.style.display = "none";
+    }
+
+    if (data.isAuthenticated) {
+      showDashboard(data.user.firstName, data.user.email);
+    } else {
+      if (path === "/signup") {
+        loginSection.classList.add("hidden");
+        signupSection.classList.remove("hidden");
+      } else {
+        signupSection.classList.add("hidden");
+        loginSection.classList.remove("hidden");
+        if (path !== "/login")
+          history.replaceState({ view: "login" }, "", "/login");
+      }
+    }
+  } catch (error) {
+    if (loadingIndicator) {
+      loadingIndicator.style.display = "none";
+    }
+
+    loginSection.classList.remove("hidden");
+  }
 }
 
 // -------------------------- Sign Up --------------------------
@@ -97,10 +134,9 @@ async function handleSignup(event) {
       return;
     }
 
-    localStorage.setItem("user", JSON.stringify(result));
     form.reset();
 
-    showWelcomePage(result.firstName, result.email);
+    showDashboard(result.firstName, result.email);
   } catch (error) {
     console.error("Network Error:", error);
     alert("Something went wrong. Please try again later.");
@@ -130,9 +166,7 @@ async function handleLogin(event) {
       return;
     }
 
-    localStorage.setItem("user", JSON.stringify(result.user));
-
-    showWelcomePage(result.user.firstName, result.user.email);
+    showDashboard(result.user.firstName, result.user.email);
   } catch (error) {
     console.error("Network Error:", error);
     alert("Something went wrong. Please try again later.");
@@ -140,7 +174,7 @@ async function handleLogin(event) {
 }
 
 // -------------------------- Show Welcome Page --------------------------
-function showWelcomePage(userName, userEmail) {
+function showDashboard(userName, userEmail) {
   history.pushState({ view: "dashboard" }, "", "/dashboard");
 
   loginSection.classList.add("hidden");
@@ -173,4 +207,23 @@ PasswordInput.addEventListener("input", () => {
 
 confirmPasswordInput.addEventListener("input", () => {
   passwordErrorDisplay.textContent = "";
+});
+
+// -------------------------- Back/Forward --------------------------
+window.addEventListener("popstate", (event) => {
+  const path = window.location.pathname;
+
+  if (path === "/signup") {
+    loginSection.classList.add("hidden");
+    signupSection.classList.remove("hidden");
+    document.getElementById("dashboard-section").classList.add("hidden");
+  }
+  if (path === "/login") {
+    signupSection.classList.add("hidden");
+    loginSection.classList.remove("hidden");
+    document.getElementById("dashboard-section").classList.add("hidden");
+  }
+  if (path === "/dashboard") {
+    checkLoginStatus();
+  }
 });

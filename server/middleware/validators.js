@@ -1,3 +1,5 @@
+import jwt from "jsonwebtoken";
+
 // ------------------------------ Validate Sign up ------------------------------
 export const validateSignup = (request, response, next) => {
   const {
@@ -80,4 +82,23 @@ export const validateLogin = (request, response, next) => {
   }
 
   next();
+};
+
+export const authenticateToken = (request, response, next) => {
+  const token = request.cookies.token;
+
+  if (!token) {
+    return response
+      .status(401)
+      .json({ success: false, message: "Access denied" });
+  }
+
+  try {
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    request.user = verified;
+
+    next();
+  } catch (error) {
+    response.status(400).json({ success: false, message: "Invalid Token" });
+  }
 };
