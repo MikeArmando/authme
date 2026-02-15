@@ -26,7 +26,7 @@ A secure, full-stack authentication system built with Node.js, Express, and Post
 - **CSRF Defense:** Cookies utilize `SameSite: Strict` flags to prevent cross-site request forgery.
 - **Input Sanitization & Validation:** Leverages Zod for strict schema enforcement, email normalization, and protection against malformed inputs.
 - **Password Hashing:** Uses `bcrypt` with salt rounds to secure user credentials at rest.
-- **SQL Injection Protection:** LeEmploys parameterized queries via pg to neutralize injection vectors.
+- **SQL Injection Protection:** Employs parameterized queries via pg to neutralize injection vectors.
 
 ## Architecture
 
@@ -44,7 +44,9 @@ The project follows a modular structure:
 
 **Backend:** Node.js, Express.js
 
-**Database:** PostgreSQL (Hosted on Neon)
+**Database:** Neon (Serverless PostgreSQL)
+
+**Deployment:** Vercel (Serverless Functions)
 
 **Security & Validation:** 
 - Zod (Schema validation and data transformation),
